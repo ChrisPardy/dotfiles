@@ -97,9 +97,9 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /home/chris/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+if [ $TILIX_ID ] && [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi
 
@@ -120,7 +120,15 @@ alias csc="ssh cpardy@hfcs.csclub.uwaterloo.ca"
 #fi
 #unset __conda_setup
 # <<< conda initialize <<<
+
+#Setup ssh key
 ssh-add ~/.ssh/github >/dev/null 2>&1
+
+#show apt install when command not found, if applicable
 source /etc/zsh_command_not_found
-source ~/play_lecture.sh
+
+#Aman's handleCrappyVideoThing
+#source ~/play_lecture.sh
+
+#rustup things
 export PATH=$PATH:$HOME/.cargo/bin
