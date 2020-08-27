@@ -28,6 +28,7 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 " Line numbers
+:set number
 :set relativenumber
 
 " Enable Syntax Highlighting
