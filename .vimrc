@@ -36,7 +36,11 @@ syntax on
 
 " GruvBox Colorscheme
 set background=dark
-autocmd vimenter * colorscheme gruvbox
+"autocmd vimenter * colorscheme gruvbox
+colorscheme gruvbox
+
+" Transparency
+hi Normal guibg=NONE ctermbg=NONE
 
 " Indents/Tabs
 set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
