@@ -122,7 +122,8 @@ alias csc="ssh cpardy@hfcs.csclub.uwaterloo.ca"
 # <<< conda initialize <<<
 
 #Setup ssh key
-ssh-add ~/.ssh/github >/dev/null 2>&1
+eval "$(ssh-agent)" >/dev/null 
+ssh-add ~/.ssh/github >/dev/null 2>&1 
 
 #show apt install when command not found, if applicable
 source /etc/zsh_command_not_found
