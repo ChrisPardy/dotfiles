@@ -1,0 +1,11 @@
+#!/bin/bash
+state=$(pacmd list-cards | grep bluez_card -A20 | grep "active profile" | awk '{print $3}' | tr -d '><')
+index=`pacmd list-cards | grep bluez_card -B1 | grep index | awk '{print $2}'`
+
+if [ "$state" == "a2dp_sink" ];
+then
+    pacmd set-card-profile $index headset_head_unit
+else
+    pacmd set-card-profile $index a2dp_sink
+fi
+
