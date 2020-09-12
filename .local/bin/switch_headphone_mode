@@ -1,11 +1,15 @@
 #!/bin/bash
 state=$(pacmd list-cards | grep bluez_card -A20 | grep "active profile" | awk '{print $3}' | tr -d '><')
-index=`pacmd list-cards | grep bluez_card -B1 | grep index | awk '{print $2}'`
+headphone_index=`pacmd list-cards | grep bluez_card -B1 | grep index | awk '{print $2}'`
 
 if [ "$state" == "a2dp_sink" ];
 then
-    pacmd set-card-profile $index headset_head_unit
+    pacmd set-card-profile $headphone_index headset_head_unit
 else
-    pacmd set-card-profile $index a2dp_sink
+    pacmd set-card-profile $headphone_index a2dp_sink
+
+    #Set Internal Microphone Volume
+    mic_index=`pacmd list-sources | grep alsa_input -B1 | grep index | awk '{print $3}'`
+    pacmd set-source-volume $mic_index 25000
 fi
 
