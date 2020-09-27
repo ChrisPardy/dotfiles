@@ -97,7 +97,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+if test -f "zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"; then
+    source zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif test -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 if [ $TILIX_ID ] && [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
@@ -126,7 +131,9 @@ eval "$(ssh-agent)" >/dev/null
 ssh-add ~/.ssh/github >/dev/null 2>&1 
 
 #show apt install when command not found, if applicable
-source /etc/zsh_command_not_found
+if test -f "/etc/zsh_command_not_found"; then
+    source /etc/zsh_command_not_found
+fi
 
 #Aman's handleCrappyVideoThing
 #source ~/play_lecture.sh
