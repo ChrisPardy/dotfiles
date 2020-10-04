@@ -22,6 +22,14 @@ require("awful.hotkeys_popup.keys")
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 
+local weather_widget = require("awesome-wm-widgets.weather-widget.weather")
+local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
+local ram_widget = require("awesome-wm-widgets.ram-widget.ram-widget")
+local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
+local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
+
+
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -217,17 +225,32 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
+    api_file = io.input ("/home/chris/.weather_api.txt")
+    weather_api_key = api_file:read ("*l")
+    api_file:close ()
+
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
             s.mytaglist,
             s.mypromptbox,
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
+            volume_widget({display_notification = true}),
+            ram_widget(),
+            cpu_widget(),
+            weather_widget({
+                api_key=weather_api_key,
+                coordinates = {45.5017, -73.5673},
+                units = 'metric',
+                font_name = 'Carter One',
+                show_hourly_forecast = true,
+                show_daily_forecast = true,
+            }),
+            battery_widget({show_current_level = true}),
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             wibox.widget.systray(),
@@ -240,9 +263,9 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ }, 3, function () mymainmenu:toggle() end)
+    --awful.button({ }, 4, awful.tag.viewnext),
+    --awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
@@ -334,7 +357,32 @@ globalkeys = gears.table.join(
               {description = "run dmenu", group = "launcher"}),
     -- Browser
     awful.key({ modkey },            "b",     function () awful.util.spawn("chromium-browser") end,
-              {description = "run dmenu", group = "launcher"}),
+              {description = "run chromium", group = "launcher"}),
+
+    -- Edit Config File
+    awful.key({ modkey, "Shift" }, "e",     function () awful.util.spawn("tilix -e \"vim /home/chris/dotfiles/.config/awesome/rc.lua\"") end,
+              {description = "edit rc.lua", group = "awesome"}),
+
+    -- Volume Control
+    awful.key(
+        {},
+        'XF86AudioRaiseVolume',
+        volume_widget.raise,
+        {description = 'volume up', group = 'hotkeys'}
+    ),
+    awful.key(
+        {},
+        'XF86AudioLowerVolume',
+        volume_widget.lower,
+        {description = 'volume down', group = 'hotkeys'}
+    ),
+    awful.key(
+        {},
+        'XF86AudioMute',
+        volume_widget.toggle,
+        {description = 'toggle mute', group = 'hotkeys'}
+    ),
+
 
     awful.key({ modkey }, "x",
               function ()
@@ -348,7 +396,13 @@ globalkeys = gears.table.join(
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+              {description = "show the menubar", group = "launcher"}),
+    -- My Bindings
+    awful.key({ modkey, "Shift" }, "l",
+              function ()
+                awful.util.spawn_with_shell("i3lock -i /home/chris/dotfiles/images/lock.png -t")
+              end,
+              {description="lock screen", group="awesome"})
 )
 
 clientkeys = gears.table.join(
@@ -358,7 +412,7 @@ clientkeys = gears.table.join(
             c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
+    awful.key({ modkey }, "q",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
@@ -587,6 +641,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Wallpaper and Compisitor
 awful.util.spawn_with_shell("compton")
+awful.util.spawn_with_shell("xrandr --output eDP-1 --auto --right-of DP-1")
 --awful.util.spawn_with_shell("nitrogen --restore")
 
 
