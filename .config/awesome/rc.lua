@@ -228,6 +228,13 @@ awful.screen.connect_for_each_screen(function(s)
     api_file = io.input ("/home/chris/.weather_api.txt")
     weather_api_key = api_file:read ("*l")
     api_file:close ()
+    -- Separator
+    local separator = wibox.widget.separator {
+      orientation = 'vertical',
+      thickness = 2,
+      forced_width = 20,
+      color = beautiful.bg_normal
+    }
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -239,20 +246,24 @@ awful.screen.connect_for_each_screen(function(s)
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
-            volume_widget({display_notification = true}),
+            volume_widget({display_notification = false}),
+            separator,
             ram_widget(),
+            separator,
             cpu_widget(),
+            separator,
             weather_widget({
                 api_key=weather_api_key,
-                coordinates = {45.5017, -73.5673},
+                coordinates = {43.4668, -80.5164},
                 units = 'metric',
                 font_name = 'Carter One',
                 show_hourly_forecast = true,
                 show_daily_forecast = true,
             }),
-            battery_widget({show_current_level = true}),
+            separator,
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
+            battery_widget({show_current_level = true}),
+            separator,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
