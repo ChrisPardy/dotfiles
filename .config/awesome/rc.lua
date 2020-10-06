@@ -134,7 +134,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+mytextclock = wibox.widget.textclock("%a %b %d, %H:%M:%S",1)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -259,6 +259,7 @@ awful.screen.connect_for_each_screen(function(s)
                 font_name = 'Carter One',
                 show_hourly_forecast = true,
                 show_daily_forecast = true,
+                timeout=1200
             }),
             separator,
             layout = wibox.layout.fixed.horizontal,
@@ -312,6 +313,8 @@ globalkeys = gears.table.join(
               {description = "swap with next client by index", group = "client"}),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
+    awful.key({ modkey            }, "o", function () awful.screen.focus_relative( 1) end,
+              {description = "focus the next screen", group = "screen"}),
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
               {description = "focus the next screen", group = "screen"}),
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
@@ -368,8 +371,11 @@ globalkeys = gears.table.join(
     awful.key({ modkey },            "r",     function () awful.util.spawn("dmenu_run") end,
               {description = "run dmenu", group = "launcher"}),
     -- Browser
-    awful.key({ modkey },            "b",     function () awful.util.spawn("chromium-browser") end,
-              {description = "run chromium", group = "launcher"}),
+    awful.key({ modkey },            "b",     function () awful.util.spawn("firefox") end,
+              {description = "run web browser", group = "launcher"}),
+    -- File manager
+    awful.key({ modkey },            "e",     function () awful.util.spawn("nautilus") end,
+              {description = "run file manager", group = "launcher"}),
 
     -- Edit Config File
     awful.key({ modkey, "Shift" }, "e",     function () awful.util.spawn("tilix -e \"vim /home/chris/dotfiles/.config/awesome/rc.lua\"") end,
@@ -412,7 +418,7 @@ globalkeys = gears.table.join(
     -- My Bindings
     awful.key({ modkey, "Shift" }, "l",
               function ()
-                awful.util.spawn_with_shell("i3lock -i /home/chris/dotfiles/images/lock.png -t")
+                awful.util.spawn_with_shell("xautolock -locknow")
               end,
               {description="lock screen", group="awesome"})
 )
@@ -430,7 +436,7 @@ clientkeys = gears.table.join(
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
-    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
+    awful.key({ modkey, "Shift"   }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
@@ -660,4 +666,6 @@ awful.util.spawn_with_shell("xrandr --output eDP-1 --auto --right-of DP-1")
 -- gaps
 beautiful.useless_gap = 4
 
+-- autolock
+awful.util.spawn_with_shell('~/.config/awesome/locker.sh')
 
