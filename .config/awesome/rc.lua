@@ -416,11 +416,21 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
     -- My Bindings
+    awful.key({ modkey }, "c",
+              function ()
+                awful.util.spawn_with_shell("gnome-calculator")
+              end,
+              {description="lock screen", group="awesome"}),
     awful.key({ modkey, "Shift" }, "l",
               function ()
                 awful.util.spawn_with_shell("xautolock -locknow")
               end,
-              {description="lock screen", group="awesome"})
+              {description="lock screen", group="awesome"}),
+    awful.key({ modkey }, "Print",
+              function ()
+                awful.util.spawn_with_shell("maim -s | xclip -selection clipboard -t image/png")
+              end,
+              {description="screenshot", group="screenshot"})
 )
 
 clientkeys = gears.table.join(
@@ -563,6 +573,8 @@ awful.rules.rules = {
           "Blueman-manager",
           "Gpick",
           "Kruler",
+          "Gnome-calculator",
+          "Pavucontrol",
           "MessageWin",  -- kalarm.
           "Sxiv",
           "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
