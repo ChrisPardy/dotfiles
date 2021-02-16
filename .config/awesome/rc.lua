@@ -224,7 +224,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist {
         screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
+        filter  = awful.widget.tasklist.filter.none,
         buttons = tasklist_buttons
     }
 
@@ -254,9 +254,9 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             volume_widget({display_notification = false}),
             separator,
-            ram_widget(),
+            ram_widget({timeout=10}),
             separator,
-            cpu_widget(),
+            cpu_widget({timeout=10}),
             separator,
             weather_widget({
                 api_key=weather_api_key,
@@ -373,18 +373,16 @@ globalkeys = gears.table.join(
               end,
               {description = "restore minimized", group = "client"}),
 
-    -- dmenu
+    -- Custom Shortcuts
+    awful.key({ modkey },            "p",     function () awful.util.spawn("pavucontrol") end,
+              {description = "run pavucontrol", group = "launcher"}),
     awful.key({ modkey },            "r",     function () awful.util.spawn("dmenu_run") end,
               {description = "run dmenu", group = "launcher"}),
-    -- Browser
     awful.key({ modkey },            "b",     function () awful.util.spawn("firefox") end,
               {description = "run web browser", group = "launcher"}),
-    -- File manager
     awful.key({ modkey },            "e",     function () awful.util.spawn("nautilus") end,
               {description = "run file manager", group = "launcher"}),
-
-    -- Edit Config File
-    awful.key({ modkey, "Shift" }, "e",     function () awful.util.spawn("tilix -e \"vim /home/chris/dotfiles/.config/awesome/rc.lua\"") end,
+    awful.key({ modkey, "Shift" }, "e",     function () awful.util.spawn("tilix -e \"bash -c \\\"sleep 0.05 && vim .config/awesome/rc.lua \\\"\"") end,
               {description = "edit rc.lua", group = "awesome"}),
 
     -- Volume Control
@@ -418,9 +416,6 @@ globalkeys = gears.table.join(
                   }
               end,
               {description = "lua execute prompt", group = "awesome"}),
-    -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"}),
     -- My Bindings
     awful.key({ modkey }, "c",
               function ()
@@ -436,7 +431,12 @@ globalkeys = gears.table.join(
               function ()
                 awful.util.spawn_with_shell("maim -s | xclip -selection clipboard -t image/png")
               end,
-              {description="screenshot", group="screenshot"})
+              {description="screenshot", group="screenshot"}),
+    awful.key({ modkey, "Shift" }, "Print",
+              function ()
+                awful.util.spawn_with_shell("maim -s | tee ~/Pictures/Screenshots/screenshot_$(date +%Y_%m_%d_%H_%M_%S).png | xclip -selection clipboard -t image/png")
+              end,
+              {description="screenshot and save to file", group="screenshot"})
 )
 
 clientkeys = gears.table.join(
@@ -692,4 +692,9 @@ beautiful.useless_gap = 4
 
 -- autolock
 awful.util.spawn_with_shell('~/.config/awesome/locker.sh')
+
+-- autostart apps
+awful.util.spawn_with_shell('nextcloud --background')
+awful.util.spawn_with_shell('dropbox start')
+awful.util.spawn_with_shell('nm-applet')
 
