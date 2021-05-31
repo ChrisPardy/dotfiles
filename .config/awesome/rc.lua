@@ -682,6 +682,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- Wallpaper and Compisitor
+awful.util.spawn_with_shell('sleep 2 && feh --randomize --bg-fill --recursive ~/Pictures/Wallpapers/')
 awful.util.spawn_with_shell("compton")
 awful.util.spawn_with_shell("xrandr --output eDP-1 --auto --right-of DP-1")
 --awful.util.spawn_with_shell("nitrogen --restore")
