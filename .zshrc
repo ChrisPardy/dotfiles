@@ -8,7 +8,7 @@ export ZSH=$HOME/.oh-my-zsh
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -105,7 +105,7 @@ elif test -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"; t
 fi
 
 if [ $TILIX_ID ] && [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
+        source /etc/profile.d/vte-2.91.sh
 fi
 
 alias sshcs="ssh -X cpardy@linux.student.cs.uwaterloo.ca"
